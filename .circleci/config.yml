@@ -1,50 +1,20 @@
 version: 2.1
 
-# Define job steps
+orbs:
+  node: circleci/node@x.y
+
 jobs:
-  build-and-test:
+  install-node-example:
     docker:
-      - image: circleci/node:18  # Latest stable Node.js version
+      - image: cimg/base:stable
     steps:
       - checkout
-      - run:
-          name: Install dependencies
-          command: yarn install
-      - run:
-          name: Run tests
-          command: yarn test
-      - store_artifacts:
-          path: test-results
-
-# Cache dependencies to improve build speed
-# Adjust paths based on your project structure
-caches:
-  - yarn: yarn.lock
-
-# Define workflows
+      - node/install:
+          install-yarn: true
+          node-version: '16.13'
+      - run: npm --version
 workflows:
-  run-tests:
+  test_my_app:
     jobs:
-      - build-and-test: # Use the existing job definition
-        # Trigger the 'build-and-test' job on every push
-        filters:
-          branches:
-            only:
-              - master
-              - develop
+      - install-node-example
 
-  # Example workflow: Deploy to production on successful tests
-  # Replace the placeholder commands with your actual deployment script
-  deploy-to-production:
-    jobs:
-      - build-and-test: # Use the existing job definition
-      - deploy:
-          requires:
-            - build-and-test  # Deploy job depends on successful 'build-and-test' job
-          docker:
-            - image: circleci/python:3.9  # Use a Docker image for deployment commands
-          steps:
-            - run:
-                name: Deploy to production
-                command: |
-                  python deploy.py -e production
