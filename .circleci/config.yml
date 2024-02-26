@@ -20,3 +20,31 @@ jobs:
 # Adjust paths based on your project structure
 caches:
   - yarn: yarn.lock
+
+# Define workflows
+workflows:
+  run-tests:
+    jobs:
+      - build-and-test: # Use the existing job definition
+        # Trigger the 'build-and-test' job on every push
+        filters:
+          branches:
+            only:
+              - master
+              - develop
+
+  # Example workflow: Deploy to production on successful tests
+  # Replace the placeholder commands with your actual deployment script
+  deploy-to-production:
+    jobs:
+      - build-and-test: # Use the existing job definition
+      - deploy:
+          requires:
+            - build-and-test  # Deploy job depends on successful 'build-and-test' job
+          docker:
+            - image: circleci/python:3.9  # Use a Docker image for deployment commands
+          steps:
+            - run:
+                name: Deploy to production
+                command: |
+                  python deploy.py -e production
