@@ -21,7 +21,7 @@ jobs:
       - run: npm install
       - deploy:
           name: Deploy to Production
-          command: npm run deploy
+          command: npm start
 
 workflows:
   version: 2.1
