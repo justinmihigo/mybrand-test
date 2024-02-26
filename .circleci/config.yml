@@ -1,16 +1,36 @@
 version: 2.1
+
+orbs:
+  node: circleci/node@4.1.0
+
 jobs:
-  install-node-example:
+  build:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:16.13.2
     steps:
       - checkout
-      - node/install:
-          install-yarn: true
-          node-version: '16.13'
-      - run: npm --version
-workflows:
-  test_my_app:
-    jobs:
-      - install-node-example
+      - node/install-packages
+      - run: npm install
+      - run: npm test
+  deploy:
+    docker:
+      - image: cimg/node:16.13.2
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npm install
+      - deploy:
+          name: Deploy to Production
+          command: npm run deploy
 
+workflows:
+  version: 2.1
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
