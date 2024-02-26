@@ -1,8 +1,4 @@
 version: 2.1
-
-orbs:
-  node: circleci/node@x.y
-
 jobs:
   install-node-example:
     docker:
