@@ -1,0 +1,22 @@
+version: 2.1
+
+# Define job steps
+jobs:
+  build-and-test:
+    docker:
+      - image: circleci/node:18  # Latest stable Node.js version
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - run:
+          name: Run tests
+          command: yarn test
+      - store_artifacts:
+          path: test-results
+
+# Cache dependencies to improve build speed
+# Adjust paths based on your project structure
+caches:
+  - yarn: yarn.lock
