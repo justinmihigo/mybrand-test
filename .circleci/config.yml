@@ -1,12 +1,9 @@
-version: 2.1
+  version: 2.1
 
-# orbs:
-#   node: circleci/node@4.1.0
+  orbs:
+  node: circleci/node@4.1.0
 
-# jobs:
-#   build:
-#     docker:
-#       - image: cimg/node:16.13.2
+
 #     steps:
 #       - checkout
 #       - node/install-packages
@@ -34,12 +31,14 @@ version: 2.1
 #           filters:
 #             branches:
 #               only: main
-name: Node.js CI
 
 # on:
 #   pull_request:
 
 jobs:
+  build:
+    docker:
+      - image: cimg/node:16.13.2
   tests:
     runs-on: windows-latest
     strategy:
