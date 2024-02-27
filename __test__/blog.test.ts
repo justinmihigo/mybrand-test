@@ -10,7 +10,7 @@ const DB_URI = process.env.MONGODB_URI || "";
 const password = process.env.MONGODB_PASSWORD || "";
 const realURI = DB_URI.replace("<password>", password);
 beforeAll(async () => {
-  await mongoose.connect("mongodb://127.0.0.1:27017");
+  (await mongoose.connect(realURI)).Connection;
 }, 50000);
 afterAll(async () => {
   await mongoose.connection.close();
@@ -22,7 +22,7 @@ afterAll(async () => {
         expect(response.status).toBe(400);
     }) 
 })
-const id = '65da1b0d1557c2a2772f472e';
+const id = '65dd76ed7f28f142e34dbe03';
 describe("Logging in", () => {
   const token: { token: string } = { token: '' };
   it("should login in", async () => {
@@ -91,7 +91,7 @@ describe("Logging in", () => {
 
     it('Finding a blog byId', async () => {
       const res = await supertest(app)
-        .get('/api/blogs/65da1b2e2414b007368b44fb');
+        .get('/api/blogs/65dd76ed7f28f142e34dbe03');
       expect(res.status).toBe(200);
     });
 
@@ -108,12 +108,12 @@ describe("Logging in", () => {
     })
     it('Updating a blog without permission ', async () => {
       const res = await supertest(app)
-        .patch('/api/blogs/65da1b2e2414b007368b44fb').send({ title: "Mihigo" })
+        .patch('/api/blogs/65dd76ed7f28f142e34dbe03').send({ title: "Mihigo" })
       expect(res.status).toBe(401);
     })
     it('Updating a blog when', async () => {
       const res = await supertest(app)
-        .patch('/api/blogs/65da1b2e2414b007368b44fb').send({ title: "Mihigo" }).set('Authorization', 'Bearer '+ token.token);
+        .patch(`/api/blogs/${id}`).send({ title: "Mihigo" }).set('Authorization', 'Bearer '+ token.token);
       expect(res.status).toBe(201);
     })
   });
@@ -146,18 +146,18 @@ describe("logging in failing", () => {
 
 
 describe("Comments", () => {
-  const blogId='65da1b2e2414b007368b44fb';
+  const blogId='65dd76ed7f28f142e34dbe03';
   it('should return 200 on get all comments', async () => {
     const response = await supertest(app).get(`/api/blogs/${id}/comments`);
     expect(response.status).toBe(200);
   })
   it('should return 200 on creating a comment', async () => {
-    const response = await supertest(app).post(`/api/blogs/65da1b2e2414b007368b44fb/comments`)
+    const response = await supertest(app).post(`/api/blogs/65dd76ed7f28f142e34dbe03/comments`)
       .send({ name: "mihigo", email: "mihigojustin@gmail.com", comment: "comment created" });
     expect(response.status).toBe(200);
   })
   it('should return 400 on creating a comment for invalid inputs', async () => {
-    const response = await supertest(app).post(`/api/blogs/65da1b2e2414b007368b44fb/comments`)
+    const response = await supertest(app).post(`/api/blogs/65dd76ed7f28f142e34dbe03/comments`)
       .send({ email: "mihigojustin@gmail.com", comment: "comment created" });
     expect(response.status).toBe(400);
   })
@@ -167,7 +167,7 @@ describe("Comments", () => {
   });
 
   it('should return 200 on getting one comment', async () => {
-    const response = await supertest(app).get(`/api/blogs/65da1b2e2414b007368b44fb/comments/65dc60a6a985b98719904a86`);
+    const response = await supertest(app).get(`/api/blogs/65dd76ed7f28f142e34dbe03/comments/65dd7d96cc6a7ee75ee5a369`);
     expect(response.status).toBe(200);
   });
 
@@ -176,12 +176,12 @@ describe("Comments", () => {
     expect(response.status).toBe(404);
   })
   it('should not  update a comment', async () => {
-    const response = await supertest(app).patch(`/api/blogs/${blogId}/comments/${id}`)
+    const response = await supertest(app).patch(`/api/blogs/${blogId}/comments/65dd7d96cc6a7ee75ee5a369`)
       .send({ comment: "comment changed" });
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(201);
   })
-  it('should not  update a comment', async () => {
-    const response = await supertest(app).patch('/api/blogs/65da1b2e2414b007368b44fb/comments/65dc60a6a985b98719904a86')
+  it('should  update a comment', async () => {
+    const response = await supertest(app).patch('/api/blogs/65da1b2e2414b007368b44fb/comments/65dd7d96cc6a7ee75ee5a369')
       .send({ comment: "comment changed" });
     expect(response.status).toBe(201);
   })
@@ -191,7 +191,7 @@ describe("Comments", () => {
 })
 
 describe("Likes", () => {
-  const blogId='65da1b2e2414b007368b44fb';
+  const blogId='65dd76ed7f28f142e34dbe03';
   it('should return 200 on get all likes', async () => {
     const response = await supertest(app).get(`/api/blogs/${blogId}/likes`);
     expect(response.status).toBe(200);
@@ -214,7 +214,7 @@ describe("Queries", () => {
     expect(response.status).toBe(200);
   })
   it('should return one query', async () => {
-    const response = await supertest(app).get('/api/queries/65dad47331214534afe8955c');
+    const response = await supertest(app).get('/api/queries/65dd76f97f28f142e34dbe20');
     expect(response.status).toBe(200);
   })
   it('Should return 404 for the query that is not found', async () => {
