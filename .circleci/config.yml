@@ -3,14 +3,24 @@ version: 2.1
 orbs:
   node: circleci/node@4.1.0
 
+workflows:
+  build:
+    jobs:
+      - build
+
 jobs:
   build:
     docker:
       - image: cimg/node:16.13.2
     steps:
       - checkout
-      - setup_node:
-          node_version: 18.x
+      - run:
+          name: Set up Node.js
+          command: |
+            echo "##[group] Installing Node.js"
+            curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+            echo "##[endgroup]"
       - run: npm ci
       - run: npm test
 
