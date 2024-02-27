@@ -10,12 +10,12 @@ import bodyParser from "body-parser";
     app.use(express.json());
     app.use("/api", routes);
      // dbConnection(); 
-    try{
-       app.listen(5000, () => {
-      console.log("Server has started!");
-       });
-    }
-  catch(error){
-    console.error("Error Starting the server:", error);
-  }
+  //   try{
+  //      app.listen(5000, () => {
+  //     console.log("Server has started!");
+  //      });
+  //   }
+  // catch(error){
+  //   console.error("Error Starting the server:", error);
+  // }
   export default app;

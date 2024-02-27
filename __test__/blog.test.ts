@@ -4,17 +4,31 @@ import jwt from 'jsonwebtoken';
 import app from "../src/index"
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import http from "http";
 import { ObjectId } from "mongodb";
 dotenv.config();
 const DB_URI = process.env.MONGODB_URI || "";
 const password = process.env.MONGODB_PASSWORD || "";
 const realURI = DB_URI.replace("<password>", password);
+let server: http.Server;
 beforeAll(async () => {
+  try{
+    server=app.listen(5000, () => {
+   console.log("Server has started!");
+    });
+ }
+catch(error){
+ console.error("Error Starting the server:", error);
+}
   (await mongoose.connect(realURI)).Connection;
-}, 50000);
+});
 afterAll(async () => {
+  if(server){
+    server.close();
+  }
   await mongoose.connection.close();
-}, 50000);
+  console.log('Database is disconnected');
+});
  describe("Creating account", () => {
     it("should create a new account", async() => {
         const response = await supertest(app).post("/api/signup")

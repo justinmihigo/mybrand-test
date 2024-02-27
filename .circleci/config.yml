@@ -2,6 +2,7 @@ version: 2.1
 #orbs
 orbs:
   node: circleci/node@4.1.0
+  coveralls: coveralls/coveralls@2.2.1
 
 workflows:
   build:
@@ -23,7 +24,7 @@ jobs:
             echo "##[endgroup]"
       - run: npm ci
       - run: npm test
-
+      - coveralls/upload
 #   version: 2.1
 
 #   orbs:

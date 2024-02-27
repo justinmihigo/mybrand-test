@@ -21,7 +21,7 @@ export const createQuery = async (req: Request, res: Response )=>{
         const {error}=queryValidation(req.body);
         if(error){
           res.status(400).send ({error: error.message});
-          return;
+         return;
         }
         await querynew.save();
         res.send(querynew);
