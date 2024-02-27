@@ -1,3 +1,4 @@
+[![Coverage Status](https://coveralls.io/repos/github/justinmihigo/mybrand-test/badge.svg?branch=main)](https://coveralls.io/github/justinmihigo/mybrand-test?branch=main)
 # Backend for my portfolio website
  Aim as Junior developer or someone in tech, I need to have something that can tell people about me. Also, where I can share ideas and connect with others. This is the repo for the backend of my website
 # How it works
